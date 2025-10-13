@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A Meteorologista — Relâmpagos e Chuva no RS</title>
+  <meta name="description" content="Dados, imagens de satélite (GLM/GOES-16) e artigos sobre relâmpagos e precipitação extrema no Rio Grande do Sul — por Clarissa Felix Tavares." />
+  <style>
+    :root{
+      --blue-50:#f0f6ff; --blue-100:#dbeafe; --blue-200:#bfdbfe; --blue-300:#93c5fd; --blue-400:#60a5fa; --blue-500:#3b82f6; --blue-600:#2563eb; --blue-700:#1d4ed8; --blue-800:#1e40af; --blue-900:#1e3a8a;
+      --indigo-600:#4f46e5; --slate-600:#475569; --slate-700:#334155; --slate-800:#1f2937; --slate-900:#0f172a;
+      --bg:#ffffff; --text:#0b1220; --muted:#4b5563; --ring:rgba(37,99,235,.4);
+      --card:#ffffff; --card-border:#e5e7eb; --shadow:0 6px 20px rgba(2,6,23,.06);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif; color:var(--text); background:var(--bg);}
+    a{color:var(--blue-700); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{width:min(1120px, 92%); margin-inline:auto}
+    /* Header */
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(6px); background:rgba(255,255,255,.85); border-bottom:1px solid #eef2f7}
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:.75rem; font-weight:800; letter-spacing:.2px}
+    .brand__logo{width:36px;height:36px;border-radius:10px; background:linear-gradient(135deg,var(--blue-600),var(--indigo-600)); display:grid; place-items:center; color:#fff; font-weight:800}
+    .nav__links{display:flex; gap:1rem; align-items:center}
+    .nav__links a{padding:10px 12px; border-radius:10px; font-weight:600; color:#0b1220}
+    .nav__links a:hover{background:var(--blue-50)}
+    .btn{display:inline-block; padding:12px 16px; border-radius:12px; font-weight:700; border:1px solid transparent; box-shadow:var(--shadow); transition:.2s ease;}
+    .btn--primary{background:linear-gradient(135deg,var(--blue-600),var(--blue-700)); color:#fff}
+    .btn--primary:hover{transform:translateY(-1px)}
+    .btn--ghost{background:#fff; border-color:var(--blue-200); color:var(--blue-700)}
+    .mobile-toggle{display:none}
+
+    /* Hero */
+    .hero{position:relative; isolation:isolate;}
+    .hero__bg{position:absolute; inset:0; z-index:-1; background:radial-gradient(1200px 500px at 20% -10%, var(--blue-100), transparent), radial-gradient(900px 500px at 100% 10%, var(--blue-50), transparent)}
+    .hero .container{display:grid; grid-template-columns:1.2fr .8fr; gap:2rem; align-items:center; padding:56px 0 28px}
+    .hero__title{font-size:clamp(2rem, 4vw, 3rem); line-height:1.12; margin:0 0 .5rem; font-weight:900}
+    .hero__subtitle{margin:0 0 1.2rem; color:var(--slate-600); font-size:1.05rem}
+    .pill{display:inline-flex; align-items:center; gap:.5rem; padding:8px 12px; background:#fff; border:1px solid var(--card-border); border-radius:999px; color:var(--muted); font-weight:700; margin-bottom:12px}
+    .pill b{color:var(--blue-700)}
+    .hero__cta{display:flex; gap:.75rem; flex-wrap:wrap; margin-top:10px}
+    .hero__art{border-radius:16px; background:linear-gradient(135deg,#fff, var(--blue-50)); border:1px solid var(--card-border); box-shadow:var(--shadow); padding:16px}
+    .sparkline{height:120px; background:linear-gradient(180deg, rgba(37,99,235,.12), transparent 60%); border-radius:10px; border:1px dashed var(--blue-200)}
+
+    /* Section */
+    section{padding:56px 0}
+    .section__head{display:flex; align-items:end; justify-content:space-between; gap:1rem; margin-bottom:24px}
+    .section__title{font-size:1.6rem; margin:0; line-height:1.1}
+    .section__desc{color:var(--slate-600); margin:6px 0 0}
+
+    /* Cards grid */
+    .grid{display:grid; gap:18px}
+    .grid--3{grid-template-columns:repeat(3, 1fr)}
+    .grid--2{grid-template-columns:repeat(2, 1fr)}
+    .card{background:var(--card); border:1px solid var(--card-border); border-radius:16px; box-shadow:var(--shadow); padding:18px}
+    .card h3{margin:0 0 6px; font-size:1.05rem}
+    .card p{margin:0; color:var(--slate-600)}
+    .card .meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .tag{padding:4px 8px; border-radius:999px; background:var(--blue-50); color:var(--blue-700); font-weight:700; font-size:.8rem; border:1px solid var(--blue-200)}
+
+    /* Gallery */
+    .gallery{display:grid; grid-template-columns:repeat(4,1fr); gap:10px}
+    .gallery img{width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:12px; border:1px solid var(--card-border)}
+
+    /* Articles */
+    .articles{display:grid; gap:14px}
+    .article{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border:1px solid var(--card-border); border-radius:12px; background:#fff}
+    .article__meta{color:var(--muted); font-size:.9rem}
+    .article a.btn{box-shadow:none}
+
+    /* About */
+    .about{display:grid; grid-template-columns:1fr 1.2fr; gap:24px}
+    .about__badge{display:inline-flex; gap:.5rem; align-items:center; background:var(--blue-50); color:var(--blue-800); border:1px solid var(--blue-200); padding:6px 10px; border-radius:999px; font-weight:700}
+    .about__card{background:linear-gradient(135deg,#fff,var(--blue-50)); border:1px solid var(--card-border); border-radius:16px; padding:18px}
+    .portrait{background:#fff; border:1px solid var(--card-border); border-radius:18px; overflow:hidden; box-shadow:var(--shadow)}
+    .portrait img{display:block; width:100%; height:auto; aspect-ratio:4 / 5; object-fit:cover}
+
+    /* Footer */
+    footer{border-top:1px solid #eef2f7; padding:28px 0; background:linear-gradient(180deg,#fff, var(--blue-50))}
+    .foot{display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+    .foot small{color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero .container{grid-template-columns:1fr}
+      .about{grid-template-columns:1fr}
+      .grid--3{grid-template-columns:1fr 1fr}
+      .gallery{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width: 640px){
+      .nav__links{display:none}
+      .mobile-toggle{display:inline-flex; border:1px solid var(--blue-200); border-radius:10px; background:#fff; padding:6px 10px; align-items:center; gap:.35rem; font-weight:700; color:var(--blue-700)}
+      .grid--2,.grid--3{grid-template-columns:1fr}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+    }
+    /* Focus styles */
+    .focus-ring:focus{outline:3px solid var(--ring); outline-offset:2px}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav" aria-label="Barra de navegação">
+      <div class="brand" aria-label="Marca do site">
+        <div class="brand__logo" aria-hidden="true">⚡</div>
+        <div>
+          <div style="font-size:1.05rem">A Meteorologista</div>
+          <small style="color:var(--muted); font-weight:600">Relâmpagos • Chuva • RS</small>
+        </div>
+      </div>
+      <nav class="nav__links" aria-label="Seções do site">
+        <a class="focus-ring" href="#dados">Dados</a>
+        <a class="focus-ring" href="#artigos">Artigos</a>
+        <a class="focus-ring" href="#autora">Sobre</a>
+        <a class="btn btn--primary" href="#dados">Ver Dados</a>
+      </nav>
+      <button class="mobile-toggle" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMenu()">Menu ▾</button>
+    </div>
+    <div id="mobile-menu" class="container" style="display:none; padding-bottom:12px">
+      <div class="card" style="display:grid; gap:8px">
+        <a href="#dados">Dados</a>
+        <a href="#imagens">Imagens GLM</a>
+        <a href="#mapas">Mapas</a>
+        <a href="#artigos">Artigos</a>
+        <a href="#autora">Sobre</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="container">
+      <div>
+        <div class="pill">Base de dados da dissertação • <b>RS — 15/abr a 30/jun 2024</b></div>
+        <h1 class="hero__title">Relâmpagos e precipitação extrema no Rio Grande do Sul</h1>
+        <p class="hero__subtitle">Portal de dados e visualizações da pesquisa de <b>Clarissa Felix Tavares</b>, com séries horárias por estação (INMET/CEMADEN), imagens GLM/GOES‑16 e mapas de densidade de flashes.</p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#dados">Explorar dados</a>
+          <a class="btn btn--ghost" href="#artigos">Ler artigos</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Dados -->
+  <section id="dados">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Dados disponíveis</h2>
+          <p class="section__desc">Acesse as séries horárias, tabelas numéricas e arquivos para reuso em pesquisa e ensino.</p>
+        </div>
+      </div>
+
+      <div class="section__head" style="margin-top:32px">
+        <div>
+          <h3 class="section__title" style="font-size:1.3rem">Arquivos do Projeto</h3>
+          <p class="section__desc">Acesso a todos os materiais, dados e documentação da pesquisa.</p>
+        </div>
+      </div>
+
+      <!-- File Explorer Style Layout -->
+      <div class="card" style="margin-bottom:24px">
+        <style>
+          .file-explorer {
+            display: grid;
+            gap: 16px;
+          }
+          .files-section {
+            background: var(--bg);
+            border-radius: 12px;
+            overflow: hidden;
+          }
+          .files-header {
+            font-weight: 700;
+            color: var(--blue-700);
+            padding: 12px 16px;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 12px;
+            margin-top: 12px;
+          }
+          .files-header::before {
+            content: "📁";
+            margin-right: 8px;
+          }
+          .files-header::after {
+            content: "▼";
+            font-size: 12px;
+            transition: transform 0.2s;
+          }
+          .files-header.collapsed::after {
+            transform: rotate(-90deg);
+          }
+          .files-content {
+            display: grid;
+            gap: 12px;
+            transition: all 0.3s ease;
+          }
+          .files-content.collapsed {
+            display: none;
+          }
+          .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 8px;
+            padding: 0 4px;
+          }
+          .file-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            color: var(--slate-700);
+            border-radius: 8px;
+            transition: all 0.2s;
+            border: 1px solid var(--card-border);
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .file-link:hover {
+            background: var(--blue-50);
+            color: var(--blue-700);
+            border-color: var(--blue-200);
+          }
+          .file-link.pdf::before { content: "📄"; }
+          .file-link.xlsx::before { content: "📊"; }
+          .file-link.csv::before { content: "📈"; }
+          .file-link.folder::before { content: "📁"; }
+          
+          .search-box {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 1rem;
+          }
+          .search-box:focus {
+            outline: none;
+            border-color: var(--blue-300);
+            box-shadow: 0 0 0 3px var(--ring);
+          }
+          .no-results {
+            text-align: center;
+            padding: 24px;
+            color: var(--slate-600);
+            grid-column: 1 / -1;
+          }
+          .section-info {
+            margin: 4px 0 12px;
+            padding: 8px 12px;
+            background: var(--blue-50);
+            border-radius: 6px;
+            color: var(--slate-600);
+            font-size: 0.9rem;
+          }
+        </style>
+        
+        <div class="file-explorer">
+          <input type="text" 
+                 class="search-box" 
+                 placeholder="Buscar por nome do arquivo ou tipo (ex: pdf, xlsx, csv)..." 
+                 oninput="filterFiles(this.value)"
+                 aria-label="Campo de busca de arquivos">
+
+          <div id="filesContainer">
+            <!-- Files will be loaded here via JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Estrutura de arquivos
+        const filesStructure = [
+          {
+            title: "Publicações e Apresentações",
+            description: "Trabalhos apresentados em eventos e publicações científicas",
+            files: [
+              { name: "A Matemática das Enchentes 2024", path: "extras/A matematica das enchentes 2024.pdf", type: "pdf" },
+              { name: "ECSS 2025 - Apresentação", path: "extras/Publicacoes da Mestranda/ECSS2025-256-print.pdf", type: "pdf" },
+              { name: "ENPOS 2024 - Apresentação", path: "extras/Publicacoes da Mestranda/ENPOS_2024_CLARISSA.pdf", type: "pdf" },
+              { name: "ERMAC 2025 - Apresentação", path: "extras/Publicacoes da Mestranda/ERMAC_2025_Clarissa.pdf", type: "pdf" }
+            ]
+          },
+          {
+            title: "Dados e Análises",
+            description: "Planilhas e tabelas com dados processados",
+            files: [
+              { name: "Contagens Total (0mm-45mm)", path: "extras/Contagens_Total_0mm_45mm.pdf", type: "pdf" },
+              { name: "Correlação por Estação", path: "extras/correlacao_por_estacao.csv", type: "csv" },
+              { name: "Dados Avulsos (Chuva x Flashes)", path: "extras/Dados Avulsos chuva x flashes.xlsx", type: "xlsx" },
+              { name: "Flashes por Hora - RS", path: "extras/Flashes_por_hora_RS.xlsx", type: "xlsx" },
+              { name: "Flashes - Resumo por Hora", path: "extras/Flashes_resumo por hora de ocorrencia.xlsx", type: "xlsx" },
+              { name: "Por Estação - Chuva x Flashes", path: "extras/por_estacao_chuva_x_flashes.csv", type: "csv" },
+              { name: "Flashes do RS (GLM)", path: "extras/GLM no RS/Flashes do RS.xlsx", type: "xlsx" }
+            ]
+          },
+          {
+            title: "Material de Consulta",
+            description: "Artigos e referências bibliográficas",
+            files: [
+              { name: "Material de Consulta", path: "extras/Material de Consulta", type: "folder" },
+            ]
+          },
+          {
+            title: "Dados por Estação",
+            description: "Arquivos detalhados para cada estação meteorológica",
+            folders: [
+              { name: "Flashes por Estação", path: "extras/Flashes Estacoes", type: "folder" },
+              { name: "Precipitação e Flashes", path: "extras/Dados Precipatacao e Flashes por Estacao", type: "folder" },
+              { name: "Tabelas de Precipitação", path: "extras/Tabelas Precipitacao Estacao", type: "folder" }
+            ]
+          },
+          {
+            title: "Imagens GLM/GOES-16",
+            description: "Visualizações e mapas de densidade de flashes",
+            folders: [
+              { name: "Acumulado 24 horas", path: "extras/GLM no RS/Imagens Acumulado 24horas", type: "folder" },
+              { name: "Imagens Horárias", path: "extras/GLM no RS/Imagens Horarias", type: "folder" }
+            ]
+          }
+        ];
+
+        // Função para alternar a visibilidade das seções
+        function toggleSection(el) {
+          const content = el.nextElementSibling;
+          el.classList.toggle('collapsed');
+          content.classList.toggle('collapsed');
+        }
+
+        // Função para obter o ícone baseado no tipo de arquivo
+        function getFileClass(type) {
+          return type || 'file';
+        }
+
+        // Função para filtrar arquivos
+        function filterFiles(query) {
+          query = query.toLowerCase();
+          const sections = document.querySelectorAll('.files-section');
+          
+          sections.forEach(section => {
+            const files = section.querySelectorAll('.file-link');
+            let hasVisibleFiles = false;
+            
+            files.forEach(file => {
+              const searchText = `${file.textContent} ${file.dataset.type}`.toLowerCase();
+              const isVisible = searchText.includes(query);
+              file.style.display = isVisible ? '' : 'none';
+              if (isVisible) hasVisibleFiles = true;
+            });
+            
+            section.style.display = hasVisibleFiles ? '' : 'none';
+          });
+        }
+
+        // Função para renderizar a estrutura de arquivos
+        function renderFileStructure() {
+          const container = document.getElementById('filesContainer');
+          
+          filesStructure.forEach(section => {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'files-section';
+            
+            const header = document.createElement('div');
+            header.className = 'files-header';
+            header.textContent = section.title;
+            header.onclick = () => toggleSection(header);
+            
+            const content = document.createElement('div');
+            content.className = 'files-content';
+            
+            if (section.description) {
+              const info = document.createElement('div');
+              info.className = 'section-info';
+              info.textContent = section.description;
+              content.appendChild(info);
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'files-grid';
+            
+            // Adiciona arquivos
+            if (section.files) {
+              section.files.forEach(file => {
+                const link = document.createElement('a');
+                link.href = file.path;
+                link.className = `file-link ${getFileClass(file.type)}`;
+                link.textContent = file.name;
+                link.dataset.type = file.type;
+                grid.appendChild(link);
+              });
+            }
+            
+            // Adiciona pastas
+            if (section.folders) {
+              section.folders.forEach(folder => {
+                const link = document.createElement('a');
+                link.href = folder.path;
+                link.className = 'file-link folder';
+                link.textContent = folder.name;
+                link.dataset.type = 'folder';
+                grid.appendChild(link);
+              });
+            }
+            
+            content.appendChild(grid);
+            sectionDiv.appendChild(header);
+            sectionDiv.appendChild(content);
+            container.appendChild(sectionDiv);
+          });
+        }
+
+        // Inicializa a estrutura quando a página carregar
+        window.addEventListener('load', renderFileStructure);
+      </script>
+      </div>
+      
+      
+    </div>
+  </section>
+
+  <!-- Artigos -->
+  <section id="artigos">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Artigos publicados</h2>
+          <p class="section__desc">Produção científica de Clarissa Tavares relacionada a relâmpagos, precipitação e convecção.</p>
+        </div>
+        <a class="btn btn--ghost" href="#">Ver currículo</a>
+      </div>
+      <div class="articles">
+        <div class="article">
+          <div>
+            <strong>Estudo da Evolução Temporal dos Relâmpagos no RS — ECSS 2025</strong>
+            <div class="article__meta">2025 • European Conference on Severe Storms</div>
+          </div>
+          <div>
+            <a class="btn btn--primary" href="extras/Publicacoes da Mestranda/ECSS2025-256-print.pdf">Ler</a>
+          </div>
+        </div>
+        <div class="article">
+          <div>
+            <strong>Análise de Eventos Extremos e Atividade Elétrica — ENPOS 2024</strong>
+            <div class="article__meta">2024 • Encontro de Pós-Graduação UFPel</div>
+          </div>
+          <div>
+            <a class="btn btn--primary" href="extras/Publicacoes da Mestranda/ENPOS_2024_CLARISSA.pdf">Ler</a>
+          </div>
+        </div>
+        <div class="article">
+          <div>
+            <strong>Modelagem Matemática de Eventos Meteorológicos — ERMAC 2025</strong>
+            <div class="article__meta">2025 • Encontro Regional de Matemática Aplicada e Computacional</div>
+          </div>
+          <div>
+            <a class="btn btn--primary" href="extras/Publicacoes da Mestranda/ERMAC_2025_Clarissa.pdf">Ler</a>
+          </div>
+        </div>
+        <div class="article">
+          <div>
+            <strong>Distribuição Espacial de Relâmpagos no RS — ESBMET 2025</strong>
+            <div class="article__meta">2025 • Encontro Sul-Brasileiro de Meteorologia</div>
+          </div>
+          <div>
+            <a class="btn btn--primary" href="extras/Publicacoes da Mestranda/ESBMET_2025_ClarissaTavares.pdf">Ler</a>
+          </div>
+        </div>
+        <div class="article">
+          <div>
+            <strong>Análise da Atividade Elétrica em Sistemas Convectivos — MCSul 2025</strong>
+            <div class="article__meta">2025 • Meeting on Convective Systems of South America</div>
+          </div>
+          <div>
+            <a class="btn btn--primary" href="extras/Publicacoes da Mestranda/MCSul__Clarissa_Tavares_.pdf">Ler</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre a autora -->
+  <section id="autora">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Sobre a autora</h2>
+          <p class="section__desc">Perfil institucional de Clarissa Felix Tavares (UFPel / PPGMMat).</p>
+        </div>
+      </div>
+      <div class="about">
+        <div>
+          <figure class="portrait">
+            <img src="assets/clarissa.jpg" alt="Retrato profissional de Clarissa Felix Tavares" loading="lazy" />
+          </figure>
+          <div class="about__card" style="margin-top:16px">
+            <span class="about__badge">👩‍🔬 Pesquisadora • Educação Matemática</span>
+            <h3 style="margin:12px 0 6px">Clarissa Felix Tavares</h3>
+            <p>
+              Clarissa é <b>bacharel em Meteorologia</b> pela UFPel (turma 2005/2, colação em 11/02/2006) e <b>licenciada em Matemática</b> (colação em 10/11/2023). Ingressou como <b>aluna especial</b> no PPGMMat/UFPel em agosto/2023 e tornou-se <b>mestranda</b> em 06/03/2024.
+            </p>
+            <p>
+              Desenvolve a pesquisa <i>“Estudo da Evolução Temporal dos Relâmpagos na Região Sul do Brasil Durante as Enchentes de Maio de 2024”</i>, investigando a relação entre <b>atividade elétrica atmosférica</b> e <b>precipitação extrema</b> com dados GLM/GOES‑16, INMET e CEMADEN.
+            </p>
+            <p>
+              Atua como <b>professora e criadora de conteúdos voltados à educação matemática</b>, aliando <b>rigor científico</b> e <b>linguagem acessível</b> para tornar o conhecimento meteorológico e matemático útil à sociedade.
+            </p>
+            <p style="margin:10px 0 0; font-size:.9rem; color:var(--muted)"><em>Crédito da foto:</em> arquivo pessoal de Clarissa Felix Tavares.</p>
+          </div>
+        </div>
+        <div>
+          <div class="grid grid--2">
+            <div class="card">
+              <h3>Linhas de interesse</h3>
+              <ul style="margin:8px 0 0; padding-left:18px; color:var(--slate-700)">
+                <li>Relâmpagos (GLM/GOES‑16) e convecção</li>
+                <li>Chuva extrema e risco hidrológico</li>
+                <li>Integração satélite–pluviômetros</li>
+                <li>Visualização científica e ensino</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Contato</h3>
+              <p style="margin:8px 0 0">E‑mail: <a href="mailto:cftavares@inf.ufpel.edu.br">cftavares@inf.ufpel.edu.br</a></p>
+              <p style="margin:4px 0 0">Instagram/LinkedIn: <a target="_blank" href="https://www.linkedin.com/in/clarissatavares/">@clarissatavares</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container foot">
+      <div class="brand" style="gap:.5rem">
+        <div class="brand__logo" aria-hidden="true" style="width:28px;height:28px">⚡</div>
+        <strong>A Meteorologista</strong>
+      </div>
+      <small>© 2025 Clarissa Felix Tavares — Dados e visualizações de relâmpagos e precipitação no RS.</small>
+      <div>
+        <a href="#">Política de Dados</a> • <a href="#">Licenças</a> • <a href="#">Acessibilidade</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu(){
+      const m = document.getElementById('mobile-menu');
+      const btn = document.querySelector('.mobile-toggle');
+      const open = m.style.display === 'block';
+      m.style.display = open ? 'none' : 'block';
+      btn.setAttribute('aria-expanded', String(!open));
+    }
+  </script>
+</body>
+</html>
