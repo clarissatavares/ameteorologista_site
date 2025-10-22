@@ -111,6 +111,8 @@
       </div>
       <nav class="nav__links" aria-label="Seções do site">
         <a class="focus-ring" href="#dados">Dados</a>
+        <a class="focus-ring" href="#videos">Vídeos</a>
+        <a class="focus-ring" href="#podcasts">Podcasts</a>
         <a class="focus-ring" href="#artigos">Artigos</a>
         <a class="focus-ring" href="#autora">Sobre</a>
         <a class="btn btn--primary" href="#dados">Ver Dados</a>
@@ -120,8 +122,8 @@
     <div id="mobile-menu" class="container" style="display:none; padding-bottom:12px">
       <div class="card" style="display:grid; gap:8px">
         <a href="#dados">Dados</a>
-        <a href="#imagens">Imagens GLM</a>
-        <a href="#mapas">Mapas</a>
+        <a href="#videos">Vídeos</a>
+        <a href="#podcasts">Podcasts</a>
         <a href="#artigos">Artigos</a>
         <a href="#autora">Sobre</a>
       </div>
@@ -418,6 +420,76 @@
       </div>
       
       
+    </div>
+  </section>
+
+  <!-- Vídeos -->
+  <section id="videos">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Vídeos e Palestras</h2>
+          <p class="section__desc">Apresentações, entrevistas e conteúdos em vídeo sobre meteorologia e eventos climáticos.</p>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        <div class="card">
+          <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; margin-bottom:12px">
+            <iframe style="position:absolute; top:0; left:0; width:100%; height:100%" src="https://www.youtube.com/embed/9oDfnVztHjY" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3>Eventos Climáticos Extremos no RS</h3>
+          <p>Análise sobre os eventos climáticos extremos ocorridos no Rio Grande do Sul.</p>
+        </div>
+        <div class="card">
+          <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; margin-bottom:12px">
+            <iframe style="position:absolute; top:0; left:0; width:100%; height:100%" src="https://www.youtube.com/embed/6NE4tMJpM4s" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <h3>Relâmpagos e Precipitação</h3>
+          <p>Apresentação sobre a relação entre atividade elétrica atmosférica e precipitação extrema.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Podcasts -->
+  <section id="podcasts" style="background:var(--blue-50)">
+    <div class="container">
+      <div class="section__head">
+        <div>
+          <h2 class="section__title">Podcasts e Áudios</h2>
+          <p class="section__desc">Entrevistas, discussões e conteúdos em áudio sobre meteorologia e ciência.</p>
+        </div>
+      </div>
+      <div class="grid grid--2">
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+            <div style="font-size:2rem" aria-hidden="true">🎙️</div>
+            <div>
+              <h3 style="margin:0">Raios e Enchentes no RS</h3>
+              <div style="color:var(--muted); font-size:0.9rem">O Estudo que Conecta Eletricidade e Chuva</div>
+            </div>
+          </div>
+          <audio controls preload="none" style="width:100%; margin-top:8px">
+            <source src="extras/Podcasts/Raios_e_Enchentes_no_RS_O_Estudo_que_Conecta_Eletricidade_e_Ch.m4a" type="audio/mp4">
+            Seu navegador não suporta o elemento de áudio.
+          </audio>
+          <p style="margin-top:12px">Análise sobre a relação entre atividade elétrica atmosférica e os eventos extremos de precipitação no Rio Grande do Sul.</p>
+        </div>
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">
+            <div style="font-size:2rem" aria-hidden="true">🎙️</div>
+            <div>
+              <h3 style="margin:0">Relâmpagos Precedem a Tragédia</h3>
+              <div style="color:var(--muted); font-size:0.9rem">Como Satélites Viam as Mega Tempestades</div>
+            </div>
+          </div>
+          <audio controls preload="none" style="width:100%; margin-top:8px">
+            <source src="extras/Podcasts/Relâmpagos_Precedem_a_Tragédia_Como_Satélites_Viam_as_Mega_Tem.m4a" type="audio/mp4">
+            Seu navegador não suporta o elemento de áudio.
+          </audio>
+          <p style="margin-top:12px">Discussão sobre como os dados de satélite GLM/GOES-16 captaram os sinais de tempestades severas antes das enchentes.</p>
+        </div>
+      </div>
     </div>
   </section>
 
